@@ -1,0 +1,23 @@
+# Environments
+.venv/
+.env
+
+# Data and Artifacts (Too large for GitHub)
+data/
+artifacts/
+*.parquet
+*.npy
+*.jsonl
+*.gz
+
+# Output
+submission.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS
+.DS_Store
+Thumbs.db

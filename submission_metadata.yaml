@@ -1,0 +1,45 @@
+team_name: "Redrob Team"  
+
+primary_contact:
+  name: "Participant"
+  email: "participant@example.com"
+  phone: "+91-0000000000"        
+
+team_members:
+  - name: "Participant"
+    email: "participant@example.com"
+    role: "AI Engineer"          
+
+github_repo: "https://github.com/YOUR_USERNAME/redrob_hack"
+
+sandbox_link: "https://huggingface.co/spaces/YOUR_USERNAME/redrob-ranker"
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl.gz --out ./submission.csv"
+
+compute:
+  platform: "Local Machine"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.12"
+  os: "Windows"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: true
+  pre_computation_time_minutes: 30
+
+ai_tools_used:
+  - "Claude"
+  - "Cursor"
+
+ai_usage_summary: |
+  Used AI assistants for scaffolding the pipeline, workflow code assembly, and reasoning generation snippet implementation. No candidate data was fed to any LLM.
+
+methodology_summary: |
+  Rule-based ranker with semantic embeddings and explicit reasoning capture. Five scoring components (embedding similarity, skills, title/company, location, and shipper signals) combined with an availability multiplier (active status, response rates). Used bge-large for semantic embeddings to capture candidate profiles implicitly. Runtime is heavily optimized by loading a precomputed parquet feature matrix and using vectorized pandas logic for the top 100 selection.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
