@@ -5,18 +5,19 @@ from tqdm import tqdm
 
 def build_candidate_text(candidate: dict) -> str:
     parts = []
-    title = candidate.get("current_title", "")
-    yoe = candidate.get("years_of_experience", 0)
+    profile = candidate.get("profile", {})
+    title = profile.get("current_title", "")
+    yoe = profile.get("years_of_experience", 0)
     parts.append(f"{title} with {yoe:.1f} years of experience.")
     
-    loc = candidate.get("location", "")
+    loc = profile.get("location", "")
     parts.append(f"Located in {loc}.")
     
-    summary = candidate.get("summary", "")
+    summary = profile.get("summary", "")
     if summary:
         parts.append(summary)
     
-    for job in candidate.get("work_history", [])[:5]:
+    for job in candidate.get("career_history", [])[:5]:
         company = job.get("company", "")
         job_title = job.get("title", "")
         duration = job.get("duration_months", 0)

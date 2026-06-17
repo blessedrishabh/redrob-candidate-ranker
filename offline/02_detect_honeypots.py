@@ -12,21 +12,21 @@ def compute_honeypot_flags(candidate: dict) -> dict:
     now = datetime.now()
     
     # --- CRITICAL FLAGS ---
-    for job in candidate.get("work_history", []):
+    for job in candidate.get("career_history", []):
         company_founded = job.get("company_founded_year")
-        job_start = job.get("start_year")
+        job_start = int(job.get("start_date")[:4]) if job.get("start_date") else None
         if company_founded and job_start:
             if int(job_start) < int(company_founded):
                 flags["critical"].append(f"started_at_{job['company']}_before_founded")
     
-    yoe = candidate.get("years_of_experience", 0)
-    work_history = candidate.get("work_history", [])
+    yoe = candidate.get("profile", {}).get("years_of_experience", 0)
+    work_history = candidate.get("career_history", [])
     if work_history:
         try:
             earliest_start = min(
-                int(j.get("start_year", now.year)) 
+                int(j.get("start_date")[:4]) 
                 for j in work_history 
-                if j.get("start_year")
+                if j.get("start_date")
             )
             max_possible_yoe = now.year - earliest_start
             if yoe > max_possible_yoe + 2:
@@ -35,7 +35,7 @@ def compute_honeypot_flags(candidate: dict) -> dict:
             pass
     
     skills = candidate.get("skills", [])
-    skill_years = candidate.get("skill_years", {})
+    skill_years = {s["name"]: s.get("duration_months", 0)/12.0 for s in skills if isinstance(s, dict)}
     for skill, years in skill_years.items():
         if years == 0 and skill in ["Python", "ML", "PyTorch", "TensorFlow"]:
             flags["critical"].append(f"expert_with_zero_years:{skill}")
@@ -61,7 +61,7 @@ def compute_honeypot_flags(candidate: dict) -> dict:
     
     completeness = candidate.get("redrob_signals", {}).get("profile_completeness_score", 0)
     if completeness == 100:
-        missing = [f for f in ["skills", "work_history", "education"] 
+        missing = [f for f in ["skills", "career_history", "education"] 
                    if not candidate.get(f)]
         if missing:
             flags["critical"].append(f"completeness_100_but_missing:{missing}")
@@ -115,7 +115,7 @@ def spot_check_honeypots(candidates, honeypot_results, n=10):
                if honeypot_results[c["candidate_id"]]["is_honeypot"]][:n]
     for c in flagged:
         print(f"\n--- {c['candidate_id']} ---")
-        print(f"  Title: {c.get('current_title')}")
-        print(f"  YoE: {c.get('years_of_experience')}")
+        print(f"  Title: {c.get('profile', {}).get('current_title')}")
+        print(f"  YoE: {c.get('profile', {}).get('years_of_experience')}")
         print(f"  Skills: {c.get('skills', [])[:5]}")
         print(f"  Flags: {honeypot_results[c['candidate_id']]}")

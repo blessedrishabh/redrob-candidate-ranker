@@ -159,12 +159,12 @@ def rank_candidates(features: pd.DataFrame, honeypot_ids: set) -> pd.DataFrame:
     features["score"] = compute_scores_vectorized(features)
     features.loc[features["is_honeypot"], "score"] = 0.0
     
-    features = features.sort_values("score", ascending=False).reset_index(drop=True)
+    features = features.sort_values(["score", "candidate_id"], ascending=[False, True]).reset_index(drop=True)
     features["rank"] = features.index + 1
     
     print(f"[INFO] Scoring complete in {time.time()-t0:.1f}s")
     
-    elapsed = time.time() - START_TIME
+    elapsed = time.time() - t0
     print(f"[INFO] Total elapsed: {elapsed:.1f}s / {DEADLINE_SECONDS}s budget")
     
     if elapsed > DEADLINE_SECONDS:

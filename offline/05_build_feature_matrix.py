@@ -24,7 +24,8 @@ def compute_jd_keyword_score(c):
     score = 0.0
     skills_raw = c.get("skills", [])
     skills_list = [s.get("name", "") for s in skills_raw] if skills_raw and isinstance(skills_raw[0], dict) else skills_raw
-    full_text = " ".join([str(s).lower() for s in skills_list]) + " " + str(c.get("current_title", "")).lower() + " " + " ".join([str(j).lower() for j in c.get("work_history", [])])
+    profile = c.get("profile", {})
+    full_text = " ".join([str(s).lower() for s in skills_list]) + " " + str(profile.get("current_title", "")).lower() + " " + " ".join([str(j).lower() for j in c.get("career_history", [])])
     for key, rule in JD_ANALYSIS["must_haves"].items():
         keywords = rule.get("keywords_hard", []) + rule.get("keywords_semantic", []) + rule.get("keywords", [])
         if any(kw.lower() in full_text for kw in keywords): score += rule.get("weight", 0)
@@ -41,18 +42,18 @@ def get_location_score(loc):
 
 def compute_shipper_bonus(c):
     bonus = 0.0
-    work_history = " ".join([str(j).lower() for j in c.get("work_history", [])])
+    work_history = " ".join([str(j).lower() for j in c.get("career_history", [])])
     for key, rule in JD_ANALYSIS["shipper_bonus"].items():
         if any(kw.lower() in work_history for kw in rule.get("keywords", [])): bonus += rule.get("bonus", 0)
     return min(0.20, bonus)
 
 def compute_disqualifier_penalty(c):
     penalty = 0.0
-    title = str(c.get("current_title", "")).lower()
+    title = str(c.get("profile", {}).get("current_title", "")).lower()
     skills_raw = c.get("skills", [])
     skills_list = [s.get("name", "") for s in skills_raw] if skills_raw and isinstance(skills_raw[0], dict) else skills_raw
     skills = " ".join([str(s).lower() for s in skills_list])
-    work_history = c.get("work_history", [])
+    work_history = c.get("career_history", [])
     
     IRRELEVANT = ["hr", "marketing", "content", "graphic", "sales", "finance"]
     if any(t in title for t in IRRELEVANT) and any(k in skills for k in ["ai ", "ml ", "machine learning", "rag"]):
@@ -91,9 +92,9 @@ def build_feature_matrix(candidates, embeddings, honeypot_results, jd_embedding)
             "is_honeypot": is_honeypot,
             
             # Profile substance
-            "current_title": c.get("current_title", ""),
-            "years_of_experience": c.get("years_of_experience", 0),
-            "location": c.get("location", ""),
+            "current_title": c.get("profile", {}).get("current_title", ""),
+            "years_of_experience": c.get("profile", {}).get("years_of_experience", 0),
+            "location": c.get("profile", {}).get("location", ""),
             "skills": "|".join(skills_list),  # pipe-separated for parquet
             "num_skills": len(skills_list),
             
@@ -120,8 +121,8 @@ def build_feature_matrix(candidates, embeddings, honeypot_results, jd_embedding)
             
             # Pre-computed rule-based scores (computed offline)
             "jd_keyword_score": compute_jd_keyword_score(c),
-            "company_type_score": score_company_profile(c.get("work_history", [])),
-            "location_score": get_location_score(c.get("location", "")),
+            "company_type_score": score_company_profile(c.get("career_history", [])),
+            "location_score": get_location_score(c.get("profile", {}).get("location", "")),
             "shipper_bonus": compute_shipper_bonus(c),
             "disqualifier_penalty": compute_disqualifier_penalty(c),
             

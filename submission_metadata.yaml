@@ -6,13 +6,17 @@ primary_contact:
   phone: "+91-9548768853"        
 
 team_members:
-  - name: "Rishabh Bharadwaj"
-    email: "rishabh58251@gmail.com"
-    role: "Tester"
-
   - name: "Saptarshi Das"
     email: "saptarshid@nitp.ac.in"
-    role: "Developer"        
+    role: "Tester"
+
+  - name: "Rishabh Sharma"
+    email: "rishabhsharma5923@gmail.com"
+    role: "Developer"
+
+  - name: "Rishabh Bhardwaj"
+    email: "rishabh58251@gmail.com"
+    role: "Developer"    
 
 github_repo: "https://github.com/blessedrishabh/redrob-candidate-ranker"
 
@@ -32,7 +36,8 @@ compute:
   pre_computation_time_minutes: 30
 
 ai_tools_used:
-  - "Antigravity 2.0"
+  - "Claude"
+  - "Cursor"
 
 ai_usage_summary: |
   Used AI assistants for scaffolding the pipeline, workflow code assembly, and reasoning generation snippet implementation. No candidate data was fed to any LLM.
