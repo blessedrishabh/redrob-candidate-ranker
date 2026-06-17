@@ -1,16 +1,20 @@
-team_name: "Redrob Team"  
+team_name: "Sakhaas"  
 
 primary_contact:
-  name: "Participant"
-  email: "participant@example.com"
-  phone: "+91-0000000000"        
+  name: "Rishabh Sharma"
+  email: "rishabhsharma5923@gmail.com"
+  phone: "+91-9548768853"        
 
 team_members:
-  - name: "Participant"
-    email: "participant@example.com"
-    role: "AI Engineer"          
+  - name: "Rishabh Bharadwaj"
+    email: "rishabh58251@gmail.com"
+    role: "Tester"
 
-github_repo: "https://github.com/YOUR_USERNAME/redrob_hack"
+  - name: "Saptarshi Das"
+    email: "saptarshid@nitp.ac.in"
+    role: "Developer"        
+
+github_repo: "https://github.com/blessedrishabh/redrob-candidate-ranker"
 
 sandbox_link: "https://huggingface.co/spaces/YOUR_USERNAME/redrob-ranker"
 
@@ -28,8 +32,7 @@ compute:
   pre_computation_time_minutes: 30
 
 ai_tools_used:
-  - "Claude"
-  - "Cursor"
+  - "Antigravity 2.0"
 
 ai_usage_summary: |
   Used AI assistants for scaffolding the pipeline, workflow code assembly, and reasoning generation snippet implementation. No candidate data was fed to any LLM.
